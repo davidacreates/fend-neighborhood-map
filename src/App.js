@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { loadScript } from './helpers';
+import MAP_API_KEY from './credentials';
 import './App.css';
 
 export default class App extends Component {
   componentDidMount = () => {
     const baseURL = 'https://maps.googleapis.com/maps/api/js?';
-    const API = 'AIzaSyAYWYxiUDePggeSPxYRnQt-2PCeQ0IJ6lA';
-    // connect the initMap function to the global window so google maps
-    // can invoke it
+    // connect the initMap function to the global window
+    // google maps can now invoke the function
     window.initMap = this.initMap;
     // load google maps script asynchronously
-    loadScript(`${baseURL}key=${API}&callback=initMap`);
+    // pass the callback reference to initMap
+    loadScript(`${baseURL}key=${MAP_API_KEY}&callback=initMap`);
   };
 
   // initialize google map & assign coordinates
