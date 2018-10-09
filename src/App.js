@@ -6,10 +6,11 @@ export default class App extends Component {
   componentDidMount = () => {
     const baseURL = 'https://maps.googleapis.com/maps/api/js?';
     const API = 'AIzaSyAYWYxiUDePggeSPxYRnQt-2PCeQ0IJ6lA';
+    // connect the initMap function to the global window so google maps
+    // can invoke it
+    window.initMap = this.initMap;
     // load google maps script asynchronously
     loadScript(`${baseURL}key=${API}&callback=initMap`);
-    // display the map on the page
-    window.initMap = this.initMap;
   };
 
   // initialize google map & assign coordinates
