@@ -44,6 +44,7 @@ export default class App extends Component {
         map,
         title: v.venue.name,
       });
+      return marker;
     });
   };
 
