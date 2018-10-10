@@ -4,6 +4,7 @@
 /node_modules
 
 # credentials
+/src/credentials.js
 
 # testing
 /coverage
