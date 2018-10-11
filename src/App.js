@@ -14,7 +14,7 @@ export default class App extends Component {
   };
 
   componentDidMount = () => {
-    // invoke function to get data from foursquare
+    // invoke function to get data from foursquare api
     this.getVenues();
   };
 
@@ -29,7 +29,8 @@ export default class App extends Component {
 
   // initialize google map
   // assign coordinates
-  // loop through venues array and create a marker for each venue
+  // loop through venues array and create a marker and infowindow for each venue
+  // use an event listener to open and close the infowindow
   initMap = () => {
     const myLatLng = { lat: -8.5064764, lng: 115.26023 };
     const { venues } = this.state;
@@ -37,12 +38,18 @@ export default class App extends Component {
       center: myLatLng,
       zoom: 14,
     });
-    // FIX: refactor arrow function so no error present
+    const infowindow = new window.google.maps.InfoWindow();
     venues.map(v => {
+      const title = v.venue.name;
+      const contentString = title;
       const marker = new window.google.maps.Marker({
         position: { lat: v.venue.location.lat, lng: v.venue.location.lng },
         map,
-        title: v.venue.name,
+        title,
+      });
+      marker.addListener('click', () => {
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
       });
       return marker;
     });
