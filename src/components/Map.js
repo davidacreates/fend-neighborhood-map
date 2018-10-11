@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { loadMap, MAP_BASE_URL } from '../helpers';
+import { MAP_API_KEY } from '../credentials';
 import {
-  MAP_API_KEY,
-  FSQUARE_CLIENT_ID,
-  FSQUARE_CLIENT_SECRET,
-} from '../credentials';
+  loadMap,
+  MAP_BASE_URL,
+  FSQUARE_REC_BASE_URL,
+  FSQUARE_PHOTO_BASE_URL,
+  FSQUARE_VENUE_PARAMS,
+  FSQUARE_PHOTO_PARAMS,
+  DEFAULT_CENTER,
+  DEFAULT_ZOOM,
+} from '../helpers';
 import './Map.css';
 
 export default class Map extends Component {
   state = {
     venues: [],
+    photos: [],
   };
 
   componentDidMount = () => {
     // invoke function to get data from foursquare api
     this.getVenues();
+    this.getPhotos();
   };
 
   displayMap = () => {
@@ -32,20 +39,31 @@ export default class Map extends Component {
   // loop through venues array and create a marker and infowindow for each venue
   // use an event listener to open and close the infowindow
   initMap = () => {
-    const myLatLng = { lat: -8.5064764, lng: 115.26023 };
-    const { venues } = this.state;
+    const center = DEFAULT_CENTER;
+    const zoom = DEFAULT_ZOOM;
+    const { photos } = this.state;
+
+    // create map
     const map = new window.google.maps.Map(document.getElementById('map'), {
-      center: myLatLng,
-      zoom: 14,
+      center,
+      zoom,
     });
+
+    // create infowindow
     const infowindow = new window.google.maps.InfoWindow();
+
+    // cycle through venues and display on map as markers
+    const { venues } = this.state;
     venues.map(v => {
+      console.log(v);
       const title = v.venue.name;
-      const contentString = title;
+      const { id } = v.venue;
+      const contentString = `<h2>${title}</h2>`;
       const marker = new window.google.maps.Marker({
         position: { lat: v.venue.location.lat, lng: v.venue.location.lng },
         map,
         title,
+        id,
       });
       marker.addListener('click', () => {
         infowindow.setContent(contentString);
@@ -59,24 +77,31 @@ export default class Map extends Component {
   // store the retrieved data in the places state
   // display the map on the page after the venues array is no longer empty
   getVenues = () => {
-    const FSQUARE_BASE_URL = 'https://api.foursquare.com/v2/venues/explore?';
-    const params = {
-      client_id: FSQUARE_CLIENT_ID,
-      client_secret: FSQUARE_CLIENT_SECRET,
-      section: 'food',
-      near: 'Ubud',
-      v: 20180910,
-    };
-
     // FIX: make sure error state displays in the browser not just console
-    // TODO: limit the number of markers displayed. use react 16 tut for help.
     axios
-      .get(FSQUARE_BASE_URL + new URLSearchParams(params))
+      .get(
+        `${FSQUARE_REC_BASE_URL}${new URLSearchParams(FSQUARE_VENUE_PARAMS)}`
+      )
       .then(res => {
         this.setState(
           { venues: res.data.response.groups[0].items },
           this.displayMap()
         );
+      })
+      .catch(error => console.log(error));
+  };
+
+  getPhotos = () => {
+    // FIX: make sure error state displays in the browser not just console
+    // 586c81c80037eb4b10acf3f7
+    axios
+      .get(
+        `${FSQUARE_PHOTO_BASE_URL}586c81c80037eb4b10acf3f7/photos?${new URLSearchParams(
+          FSQUARE_PHOTO_PARAMS
+        )}`
+      )
+      .then(res => {
+        console.log('hi');
       })
       .catch(error => console.log(error));
   };
