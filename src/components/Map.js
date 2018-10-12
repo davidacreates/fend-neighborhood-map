@@ -6,7 +6,7 @@ import {
   Marker,
 } from 'react-google-maps';
 import { MAP_API_KEY } from '../credentials';
-import { DEFAULT_CENTER, DEFAULT_ZOOM } from '../helpers';
+import { DEFAULT_CENTER, DEFAULT_ZOOM, mapBaseURL } from '../helpers';
 
 const MyMapComponent = withScriptjs(
   withGoogleMap(props => (
@@ -22,7 +22,7 @@ export default class Map extends Component {
       <div>
         <MyMapComponent
           isMarkerShown
-          googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&key=${MAP_API_KEY}`}
+          googleMapURL={`${mapBaseURL()}key=${MAP_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `400px` }} />}
           mapElement={<div style={{ height: `100%` }} />}
