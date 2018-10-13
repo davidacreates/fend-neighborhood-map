@@ -13,9 +13,10 @@ export default class App extends Component {
         <div className="app">
           <Context.Consumer>
             {context => (
-              <React.Fragment>
+              // uses react fragment shortcut syntax
+              <>
                 <Map {...context} />
-              </React.Fragment>
+              </>
             )}
           </Context.Consumer>
         </div>
