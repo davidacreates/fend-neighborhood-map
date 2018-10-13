@@ -13,6 +13,12 @@ export default class Provider extends Component {
   state = {
     venues: [],
     markers: [],
+    openInfoWindow: m => {
+      const { markers } = this.state;
+      m.isOpen = true;
+      this.setState({ markers: [...markers], m });
+      console.log(m);
+    },
     updateState: state => this.setState(state),
   };
 

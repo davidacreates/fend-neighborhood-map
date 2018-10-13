@@ -20,7 +20,11 @@ const MyMapComponent = withScriptjs(
     <GoogleMap defaultZoom={DEFAULT_ZOOM} defaultCenter={DEFAULT_CENTER}>
       {props.markers &&
         props.markers.filter(m => m.isVisible).map((m, index) => (
-          <Marker key={index} position={{ lat: m.lat, lng: m.lng }}>
+          <Marker
+            key={index}
+            position={{ lat: m.lat, lng: m.lng }}
+            onClick={() => props.openInfoWindow(m)}
+          >
             {m.isOpen && (
               <InfoWindow>
                 <p>Hello</p>
@@ -36,6 +40,7 @@ export default class Map extends Component {
   static propTypes = {
     updateState: PropTypes.func.isRequired,
     markers: PropTypes.array.isRequired,
+    openInfoWindow: PropTypes.func.isRequired,
   };
 
   componentDidMount = () => {
@@ -57,11 +62,11 @@ export default class Map extends Component {
   };
 
   render() {
-    const { markers } = this.props;
-    console.log(markers);
+    const { markers, openInfoWindow } = this.props;
     return (
       <div>
         <MyMapComponent
+          openInfoWindow={openInfoWindow}
           markers={markers}
           isMarkerShown
           googleMapURL={`${mapBaseURL()}key=${MAP_API_KEY}`}
