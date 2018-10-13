@@ -4,6 +4,7 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
+  InfoWindow,
 } from 'react-google-maps';
 import PropTypes from 'prop-types';
 import { MAP_API_KEY } from '../credentials';
@@ -18,11 +19,15 @@ const MyMapComponent = withScriptjs(
   withGoogleMap(props => (
     <GoogleMap defaultZoom={DEFAULT_ZOOM} defaultCenter={DEFAULT_CENTER}>
       {props.markers &&
-        props.markers
-          .filter(m => m.isVisible)
-          .map((m, index) => (
-            <Marker key={index} position={{ lat: m.lat, lng: m.lng }} />
-          ))}
+        props.markers.filter(m => m.isVisible).map((m, index) => (
+          <Marker key={index} position={{ lat: m.lat, lng: m.lng }}>
+            {m.isOpen && (
+              <InfoWindow>
+                <p>Hello</p>
+              </InfoWindow>
+            )}
+          </Marker>
+        ))}
     </GoogleMap>
   ))
 );
