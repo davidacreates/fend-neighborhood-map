@@ -2,6 +2,7 @@ import axios from 'axios';
 import { FSQUARE_CLIENT_ID, FSQUARE_CLIENT_SECRET } from './credentials';
 
 // TODO: Figure out which functions do not need to be exported and remove export
+// TODO: Add error handling for the functions (specifically the api calls)
 export const DEFAULT_CENTER = { lat: -8.5064764, lng: 115.26023 };
 export const DEFAULT_ZOOM = 14;
 
@@ -35,7 +36,7 @@ export function fsquareParams(urlParams) {
 
 // assembles the url for my api call and makes the call with it
 // i.e https://api.foursquare.com/v2/venues/search?client_id=myClientID&client_secret=myClientSecret&v=20180910&near=Ubud&query=food&limit=10
-export function fsquareGetData(endpoint, urlParams) {
+export function fsquareGetDataComplex(endpoint, urlParams) {
   return axios.get(
     `${fsquareBaseURL()}${endpoint}?${fsquareAuth()}&${fsquareParams(
       urlParams
@@ -43,17 +44,16 @@ export function fsquareGetData(endpoint, urlParams) {
   );
 }
 
-// Returns a list of venues near the current location
-export function fsquareSearch(urlParams) {
-  return fsquareGetData('search', urlParams);
+export function fsquareGetDataSimple(endpoint) {
+  return axios.get(`${fsquareBaseURL()}${endpoint}?${fsquareAuth()}`);
 }
 
-// Returns the full details about a specific venue
-export function fsquareGetVenueDetails(VENUE_ID) {
-  return fsquareGetData(`${VENUE_ID}`);
+// Returns a list of venues near the current location
+export function fsquareSearch(urlParams) {
+  return fsquareGetDataComplex('search', urlParams);
 }
 
 // Returns photos for a specific venue
 export function fsquareGetPhotos(VENUE_ID) {
-  return fsquareGetData(`${VENUE_ID}/photos`);
+  return fsquareGetDataSimple(`${VENUE_ID}/photos`);
 }
