@@ -16,6 +16,7 @@ export default class Provider extends Component {
   state = {
     venues: [],
     markers: [],
+    query: '',
     // run function to close all infoWindows
     // change clicked marker's isOpen state to true to display infoWindow
     // get the venue details from the foursquare api using the venue id
@@ -46,6 +47,28 @@ export default class Provider extends Component {
         const updatedVenue = Object.assign(venue, res.data.response.venue);
         this.setState({ venues: [...venues], updatedVenue });
       });
+    },
+    // select a venue in the venue list
+    // map through the markers and find the marker that matches the venue id
+    // pass the selected marker to the infowindow function to link the actions
+    selectVenueListItem: venue => {
+      const { markers, openInfoWindow } = this.state;
+      const marker = markers.find(m => m.id === venue.id);
+      openInfoWindow(marker);
+    },
+    // filter the venue list based on a user query
+    // remove whitespace from the user input
+    // filter the venue list by matching the name to the query
+    // return the filtered venues and pass down as props to list
+    filterVenueList: () => {
+      const { query, venues } = this.state;
+      if (query.trim() !== '') {
+        const filteredVenues = venues.filter(v =>
+          v.name.toLowerCase().includes(query.toLowerCase())
+        );
+        return filteredVenues;
+      }
+      return venues;
     },
     // general update state function
     updateState: state => this.setState(state),

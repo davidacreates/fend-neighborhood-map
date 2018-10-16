@@ -58,6 +58,7 @@ export default class Map extends Component {
   };
 
   componentDidMount = () => {
+    // search foursquare using selected parameters
     fsquareSearch({
       near: 'Ubud',
       query: 'food',
@@ -87,7 +88,7 @@ export default class Map extends Component {
           isMarkerShown
           googleMapURL={`${mapBaseURL()}key=${MAP_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `100vh` }} />}
+          containerElement={<div style={{ height: `50vh` }} />}
           mapElement={<div style={{ height: `100%` }} />}
         />
       </div>
